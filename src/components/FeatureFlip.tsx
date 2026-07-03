@@ -1,9 +1,55 @@
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+
 export default function FeatureFlip() {
+  const figureRef = useRef<HTMLDivElement | null>(null);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
+
+  useEffect(() => {
+    const figure = figureRef.current;
+    if (!figure) return;
+    const items = gsap.utils.toArray<SVGGraphicsElement>('svg *', figure);
+
+    timelineRef.current = gsap.timeline({ repeat: -1, repeatDelay: 0.65, yoyo: true })
+      .set(items, {
+        x: () => gsap.utils.random(-500, 500),
+        y: () => gsap.utils.random(-500, 500),
+        rotation: () => gsap.utils.random(-720, 720),
+        scale: 0,
+        opacity: 0,
+      })
+      .to(items, {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        scale: 1,
+        opacity: 1,
+        duration: 0.75,
+        ease: 'power4.inOut',
+        stagger: 0.0125,
+      });
+
+    return () => {
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+      }
+    };
+  }, []);
+
+  const handleMouseEnter = () => {
+    timelineRef.current?.timeScale(0.15);
+  };
+
+  const handleMouseLeave = () => {
+    timelineRef.current?.timeScale(1);
+  };
+
   return (
-    <section className="feature-section bg-[#FED75A] text-[#1C1C1C] overflow-hidden">
+    <section className="feature-section bg-[#050505] text-yellow-300 overflow-hidden">
       <div className="min-h-[70vh] lg:min-h-[80vh] flex items-center justify-center px-4 py-16">
-        <figure className="feature-figure flex items-center justify-center w-full">
-          <svg x="0px" y="0px" viewBox="0 0 883 105.2" xmlSpace="preserve" overflow="visible" className="w-full max-w-[90vw] h-auto">
+        <div ref={figureRef} className="w-full">
+          <figure className="feature-figure flex items-center justify-center w-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            <svg x="0px" y="0px" viewBox="0 0 883 105.2" xmlSpace="preserve" overflow="visible" className="w-full max-w-[90vw] h-auto">
             <polygon points="359.9,49.6 359.8,49.7 359.9,49.8 "/>
             <polygon points="28,0 10.8,0 28,9 "/>
             <polygon points="28,12.6 0,46 0,51.9 28,48.9 "/>
@@ -97,6 +143,7 @@ export default function FeatureFlip() {
           </svg>
         </figure>
       </div>
+    </div>
     </section>
   );
 }

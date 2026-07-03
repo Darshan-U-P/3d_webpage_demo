@@ -81,6 +81,14 @@
   position: relative;
 }
 
+:root {
+  --bg-global: #FED75A;
+}
+
+.bg-global {
+  background-color: var(--bg-global);
+}
+
 .feature-figure {
   position: relative;
   display: flex;

@@ -22,10 +22,16 @@ export default function AnimatedPage({ onBack }: { onBack: () => void }) {
     const context = canvas.getContext('2d');
     if (!context) return;
 
+    const IMAGE_BASE = "https://fastly.jsdelivr.net/gh/Darshan-U-P/3d_assects@main/assets/";
+    const getImageUrl = (frame: number) => `${IMAGE_BASE}male${String(frame).padStart(4, "0")}.png`;
+
     const images: HTMLImageElement[] = [];
     for (let i = 1; i <= frameCount; i += 1) {
       const img = new Image();
-      img.src = `/assets/male${String(i).padStart(4, '0')}.png`;
+      img.loading = 'eager';
+      img.decoding = 'async';
+      img.fetchPriority = 'high';
+      img.src = getImageUrl(i);
       images.push(img);
     }
     imagesRef.current = images;
@@ -46,8 +52,12 @@ export default function AnimatedPage({ onBack }: { onBack: () => void }) {
       );
 
     const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
       renderImage();
     };
 
@@ -59,10 +69,12 @@ export default function AnimatedPage({ onBack }: { onBack: () => void }) {
       const hRatio = canvasEl.width / img.width;
       const vRatio = canvasEl.height / img.height;
       const ratio = Math.max(hRatio, vRatio);
-      const centerShiftX = (canvasEl.width - img.width * ratio) / 2;
-      const centerShiftY = (canvasEl.height - img.height * ratio) / 2;
+      const centerShiftX = (canvasEl.width / (window.devicePixelRatio || 1) - img.width * ratio / (window.devicePixelRatio || 1)) / 2;
+      const centerShiftY = (canvasEl.height / (window.devicePixelRatio || 1) - img.height * ratio / (window.devicePixelRatio || 1)) / 2;
       context.clearRect(0, 0, canvasEl.width, canvasEl.height);
-      context.drawImage(img, 0, 0, img.width, img.height, centerShiftX, centerShiftY, img.width * ratio, img.height * ratio);
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
+      context.drawImage(img, 0, 0, img.width, img.height, centerShiftX, centerShiftY, img.width * ratio / (window.devicePixelRatio || 1), img.height * ratio / (window.devicePixelRatio || 1));
     };
 
     const render = () => renderImage();

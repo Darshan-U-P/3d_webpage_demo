@@ -21,40 +21,30 @@ export default function ThreeScene() {
     mount.appendChild(renderer.domElement);
 
     // Geometry
-    const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
+    const geometry = new THREE.TorusKnotGeometry(1.2, 0.36, 120, 20);
     const material = new THREE.MeshStandardMaterial({color: 0x00f2ff, wireframe: true, transparent: true, opacity: 0.8});
     const mesh = new THREE.Mesh(geometry, material);
+    mesh.scale.set(1.4, 1.4, 1.4);
     scene.add(mesh);
 
     // Glowing core
-    const coreGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+    const coreGeometry = new THREE.SphereGeometry(0.6, 32, 32);
     const coreMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
     const coreMesh = new THREE.Mesh(coreGeometry, coreMaterial);
+    coreMesh.scale.set(1.2, 1.2, 1.2);
     scene.add(coreMesh);
     
     // Core glow
     const glowMaterial = new THREE.MeshBasicMaterial({color: 0x00f2ff, transparent: true, opacity: 0.3});
-    const glowMesh = new THREE.Mesh(new THREE.SphereGeometry(0.7, 32, 32), glowMaterial);
+    const glowMesh = new THREE.Mesh(new THREE.SphereGeometry(0.85, 32, 32), glowMaterial);
     coreMesh.add(glowMesh);
-
-    // Particles
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 800;
-    const posArray = new Float32Array(particlesCount * 3);
-    for (let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 15;
-    }
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    const particlesMaterial = new THREE.PointsMaterial({size: 0.03, color: 0xffffff, transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending});
-    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-    scene.add(particlesMesh);
 
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(1, 1, 1);
     scene.add(light);
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-    camera.position.z = 5;
+    camera.position.z = 6;
 
     // Responsive handling
     const handleResize = () => {
@@ -116,14 +106,6 @@ export default function ThreeScene() {
       mesh.rotation.x = THREE.MathUtils.lerp(mesh.rotation.x, targetRotation.x + Math.sin(time * 0.3) * 0.2, 0.08);
       mesh.rotation.y = THREE.MathUtils.lerp(mesh.rotation.y, targetRotation.y + time * 0.2, 0.08);
 
-      particlesMesh.rotation.y = time * 0.05;
-
-      const positions = particlesGeometry.attributes.position.array as Float32Array;
-      for (let i = 0; i < particlesCount * 3; i += 3) {
-         positions[i + 1] += Math.sin(time + positions[i]) * 0.002;
-      }
-      particlesGeometry.attributes.position.needsUpdate = true;
-
       renderer.render(scene, camera);
     };
     animate();
@@ -141,14 +123,13 @@ export default function ThreeScene() {
 
     return () => {
       resizeObserver.disconnect();      mount.removeEventListener('pointermove', onPointerMove);
-      mount.removeEventListener('pointerleave', onPointerLeave);      mount.removeChild(renderer.domElement);
+      mount.removeEventListener('pointerleave', onPointerLeave);
+      mount.removeChild(renderer.domElement);
       geometry.dispose();
       material.dispose();
       coreGeometry.dispose();
       coreMaterial.dispose();
       glowMaterial.dispose();
-      particlesGeometry.dispose();
-      particlesMaterial.dispose();
       renderer.dispose();
     };
   }, []);
