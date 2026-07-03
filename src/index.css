@@ -19,7 +19,7 @@
   animation: marquee 15s linear infinite;
 }
 .proximity-grid {
-  padding: 3rem 0 2rem;
+  padding: 3rem 0 3cm;
 }
 .proximity-stage {
   position: relative;

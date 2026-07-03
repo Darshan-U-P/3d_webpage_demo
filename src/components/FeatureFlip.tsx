@@ -45,7 +45,7 @@ export default function FeatureFlip() {
   };
 
   return (
-    <section className="feature-section bg-[#050505] text-yellow-300 overflow-hidden">
+    <section className="feature-section bg-[#b7ff00] text-yellow-300 overflow-hidden">
       <div className="min-h-[70vh] lg:min-h-[80vh] flex items-center justify-center px-4 py-16">
         <div ref={figureRef} className="w-full">
           <figure className="feature-figure flex items-center justify-center w-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
