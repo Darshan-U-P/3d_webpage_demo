@@ -21,22 +21,22 @@ export default function ThreeScene() {
     mount.appendChild(renderer.domElement);
 
     // Geometry
-    const geometry = new THREE.TorusKnotGeometry(1.5, 0.45, 140, 24);
+    const geometry = new THREE.TorusKnotGeometry(1.4, 0.42, 140, 24);
     const material = new THREE.MeshStandardMaterial({color: 0x00f2ff, wireframe: true, transparent: true, opacity: 0.8});
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.scale.set(1.7, 1.7, 1.7);
+    mesh.scale.set(1.5, 1.5, 1.5);
     scene.add(mesh);
 
     // Glowing core
-    const coreGeometry = new THREE.SphereGeometry(0.7, 32, 32);
+    const coreGeometry = new THREE.SphereGeometry(0.65, 32, 32);
     const coreMaterial = new THREE.MeshBasicMaterial({color: 0xffffff});
     const coreMesh = new THREE.Mesh(coreGeometry, coreMaterial);
-    coreMesh.scale.set(1.4, 1.4, 1.4);
+    coreMesh.scale.set(1.2, 1.2, 1.2);
     scene.add(coreMesh);
     
     // Core glow
     const glowMaterial = new THREE.MeshBasicMaterial({color: 0x00f2ff, transparent: true, opacity: 0.3});
-    const glowMesh = new THREE.Mesh(new THREE.SphereGeometry(1.0, 32, 32), glowMaterial);
+    const glowMesh = new THREE.Mesh(new THREE.SphereGeometry(0.9, 32, 32), glowMaterial);
     coreMesh.add(glowMesh);
 
     const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -44,7 +44,7 @@ export default function ThreeScene() {
     scene.add(light);
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-    camera.position.z = 5.2;
+    camera.position.z = 5.4;
 
     // Responsive handling
     const handleResize = () => {
