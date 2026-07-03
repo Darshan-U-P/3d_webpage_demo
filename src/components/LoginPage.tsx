@@ -51,17 +51,17 @@ export default function LoginPage({ onBack }: { onBack: () => void }) {
       className="relative min-h-screen overflow-hidden bg-[#050505] text-white">
 
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-cyan-500 blur-[140px]" />
-        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-purple-600 blur-[160px]" />
+        <div className="absolute -top-24 -left-24 h-72 w-72 sm:-top-40 sm:-left-40 sm:h-96 sm:w-96 rounded-full bg-cyan-500 blur-[140px]" />
+        <div className="absolute bottom-0 right-0 h-72 w-72 sm:h-96 sm:w-96 rounded-full bg-purple-600 blur-[160px]" />
       </div>
 
-      <div className="grid min-h-screen grid-cols-1 md:grid-cols-2 relative z-10">
+      <div className="grid min-h-screen grid-cols-1 lg:grid-cols-2 relative z-10">
 
-        <div className="flex items-center justify-center p-8">
+        <div className="flex items-center justify-center p-6 sm:p-8">
 
           <div
             ref={card}
-            className="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-8 shadow-2xl relative">
+            className="w-full max-w-xl sm:max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-2xl p-6 sm:p-8 shadow-2xl relative">
 
             {/* Return Home Button */}
             <motion.button
@@ -88,7 +88,7 @@ export default function LoginPage({ onBack }: { onBack: () => void }) {
             </motion.button>
 
             <div className="pt-12">
-              <h1 className="hero-title text-4xl font-bold">
+              <h1 className="hero-title text-3xl sm:text-4xl font-bold">
                 Welcome Back
               </h1>
 

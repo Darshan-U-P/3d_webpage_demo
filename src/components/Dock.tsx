@@ -35,7 +35,7 @@ export default function Dock() {
     <motion.div
       onMouseMove={(e) => mouseX.set(e.pageX)}
       onMouseLeave={() => mouseX.set(Infinity)}
-      className="mx-auto flex h-20 items-center gap-4 rounded-full bg-white/5 backdrop-blur-2xl border border-white/10 px-6 fixed top-6 left-1/2 z-50 -translate-x-1/2 w-fit"
+      className="mx-auto flex h-16 sm:h-20 items-center gap-2 sm:gap-4 rounded-full bg-white/5 backdrop-blur-2xl border border-white/10 px-3 sm:px-6 fixed top-4 sm:top-6 left-1/2 z-50 -translate-x-1/2 w-auto max-w-[95vw] overflow-x-auto"
     >
       {ICONS.map((Icon, i) => (
         <DockIcon key={i} mouseX={mouseX} Icon={Icon} />

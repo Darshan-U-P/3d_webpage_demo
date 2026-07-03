@@ -16,6 +16,7 @@ export default function AnimatedPage({ onBack }: { onBack: () => void }) {
   });
 
   useEffect(() => {
+    let isMounted = true;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const context = canvas.getContext('2d');
@@ -28,6 +29,21 @@ export default function AnimatedPage({ onBack }: { onBack: () => void }) {
       images.push(img);
     }
     imagesRef.current = images;
+
+    const preloadImages = () =>
+      Promise.all(
+        images.map(
+          (img) =>
+            new Promise<void>((resolve) => {
+              if (img.complete && img.naturalWidth) {
+                resolve();
+                return;
+              }
+              img.onload = () => resolve();
+              img.onerror = () => resolve();
+            }),
+        ),
+      );
 
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -54,8 +70,13 @@ export default function AnimatedPage({ onBack }: { onBack: () => void }) {
     const onFirstImageLoad = () => render();
     imagesRef.current[0]?.addEventListener('load', onFirstImageLoad);
 
+    preloadImages().then(() => {
+      if (!isMounted) return;
+      render();
+      resizeCanvas();
+    });
+
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
 
     const ctx = gsap.context(() => {
       gsap.to(imageSeq.current, {
@@ -89,6 +110,7 @@ export default function AnimatedPage({ onBack }: { onBack: () => void }) {
     });
 
     return () => {
+      isMounted = false;
       imagesRef.current[0]?.removeEventListener('load', onFirstImageLoad);
       window.removeEventListener('resize', resizeCanvas);
       ctx.revert();
@@ -99,17 +121,17 @@ export default function AnimatedPage({ onBack }: { onBack: () => void }) {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050505] text-white" id="main">
       <div className="fixed inset-0 opacity-40 pointer-events-none">
-        <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-cyan-500 blur-[140px]" />
-        <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-purple-600 blur-[160px]" />
+        <div className="absolute -top-24 -left-24 h-72 w-72 sm:-top-40 sm:-left-40 sm:h-96 sm:w-96 rounded-full bg-cyan-500 blur-[140px]" />
+        <div className="absolute bottom-0 right-0 h-72 w-72 sm:h-96 sm:w-96 rounded-full bg-purple-600 blur-[160px]" />
       </div>
 
       <div id="page" className="relative h-screen w-screen bg-[#f1f1f1] text-black">
-        <div id="nav" className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4">
-          <h3 className="text-xl font-semibold tracking-[0.2em]"><b>DEMO</b></h3>
-          <button onClick={onBack} className="rounded-full bg-black px-5 py-2 text-sm font-medium text-white">{today}</button>
+        <div id="nav" className="fixed top-0 left-0 right-0 z-50 flex flex-col gap-3 items-start justify-between px-4 py-4 sm:flex-row sm:items-center sm:px-6 lg:px-8">
+          <h3 className="text-lg sm:text-xl font-semibold tracking-[0.2em]"><b>DEMO</b></h3>
+          <button onClick={onBack} className="rounded-full bg-black px-4 py-2 text-sm font-medium text-white">{today}</button>
         </div>
 
-        <div id="loop" className="absolute top-[30%] left-0 flex h-[25%] w-full overflow-hidden text-[5vw] leading-none whitespace-nowrap font-[gilroy] text-black">
+        <div id="loop" className="absolute top-[25%] left-0 flex h-[20%] w-full overflow-hidden text-[7vw] sm:text-[5vw] leading-none whitespace-nowrap font-[gilroy] text-black">
           <h1 className="mr-12 animate-marquee font-light">
             <b>DEMO</b> IS THE <b><i>REAL</i></b> <span className="-webkit-text-stroke-[1.2px] text-transparent">STORY</span> IN THE <span><i>METAVERSE.</i></span>
           </h1>
@@ -121,36 +143,40 @@ export default function AnimatedPage({ onBack }: { onBack: () => void }) {
           </h1>
         </div>
 
-        <h3 className="absolute top-[55%] left-5 text-gray-500">DEMO AIMS TO BE A DECENTRALIZED COMMUNITY THAT CAN <br /> CREATE NEW VALUES AND PROFITS THROUGH PLAY IN THE VIRTUAL <br /> WORLD.</h3>
-        <h4 className="absolute top-[62%] left-[25%] text-gray-700">...SCROLL TO READ</h4>
-        <canvas ref={canvasRef} className="relative z-10 h-full w-full" />
+        <h3 className="absolute top-[55%] left-4 right-4 text-sm text-gray-500 md:left-5 md:right-auto md:max-w-[42rem]">
+          DEMO AIMS TO BE A DECENTRALIZED COMMUNITY THAT CAN <br /> CREATE NEW VALUES AND PROFITS THROUGH PLAY IN THE VIRTUAL <br /> WORLD.
+        </h3>
+        <h4 className="absolute top-[68%] left-4 right-4 text-sm text-gray-700 md:top-[62%] md:left-[25%] md:right-auto">
+          ...SCROLL TO READ
+        </h4>
+        <canvas ref={canvasRef} className="relative z-10 h-full w-full min-h-[320px] sm:min-h-[420px]" />
       </div>
 
       <div id="page1" className="relative h-screen w-screen bg-[#f1f1f1] text-black">
-        <div id="right-text" className="absolute top-[30%] left-[10%]">
+        <div id="right-text" className="relative md:absolute md:top-[30%] md:left-[10%] top-[18%] left-4 right-4 md:right-auto max-w-full md:max-w-xl">
           <h3 className="text-gray-500 font-normal">DEMO / KEY WORD</h3>
-          <h1 className="mt-4 text-[4vw] leading-[1.1] font-semibold">HAVE FUN<br />LET'S PLAY<br />JUST BE TOGETHER</h1>
+          <h1 className="mt-4 text-[10vw] sm:text-[7vw] md:text-[4vw] leading-[1.1] font-semibold">HAVE FUN<br />LET'S PLAY<br />JUST BE TOGETHER</h1>
         </div>
-        <div id="left-text" className="absolute top-[50%] right-[10%] text-right">
-          <h1 className="text-[4vw] leading-[1.1] font-semibold">MAKE A STORY<br />TAKE A CHANCE<br />BUILD AND OWNED</h1>
+        <div id="left-text" className="relative md:absolute md:top-[50%] md:right-[10%] top-[52%] right-4 left-4 md:left-auto text-right md:text-right max-w-full md:max-w-xl">
+          <h1 className="text-[10vw] sm:text-[7vw] md:text-[4vw] leading-[1.1] font-semibold">MAKE A STORY<br />TAKE A CHANCE<br />BUILD AND OWNED</h1>
           <h3 className="mt-5 text-gray-500 font-normal">..AND MAINTAIN GOOD HUMANITY</h3>
         </div>
       </div>
 
       <div id="page2" className="relative h-screen w-screen bg-[#f1f1f1] text-black">
-        <div id="text1" className="absolute top-[30%] left-[10%]">
+        <div id="text1" className="relative md:absolute md:top-[30%] md:left-[10%] top-[18%] left-4 right-4 md:right-auto max-w-full md:max-w-lg">
           <h3 className="text-gray-500 font-normal">DEMO / HAVE FUN</h3>
-          <h1 className="mt-4 text-[5vw] leading-[1.1] font-semibold">LET'S<br />HAVE FUN<br />TOGETHER</h1>
+          <h1 className="mt-4 text-[11vw] sm:text-[8vw] md:text-[5vw] leading-[1.1] font-semibold">LET'S<br />HAVE FUN<br />TOGETHER</h1>
         </div>
-        <div id="text2" className="absolute top-[55%] right-[10%] text-right max-w-[420px] text-gray-500">
+        <div id="text2" className="relative md:absolute md:top-[55%] md:right-[10%] top-[54%] right-4 left-4 md:left-auto text-right md:text-right max-w-full md:max-w-[420px] text-gray-500">
           <p>LET'S HAVE A BLAST! LET'S JUST THROW AWAY AGE, GENDER, REGION,<br />STATUS, ETC., DON'T COMPETE, DON'T FIGHT, COOPERATE AND SHARE<br />WITH EACH OTHER AND ENJOY IT TOGETHER! SO THAT YOU CAN STAND<br />THERE IN THE NOT-TOO-DISTANT FUTURE AND DREAM OF ANOTHER NEW<br />FUTURE</p>
         </div>
       </div>
 
       <div id="page3" className="relative h-screen w-screen bg-[#f1f1f1] text-black">
-        <div id="text3" className="absolute top-[40%] right-[10%] text-right">
+        <div id="text3" className="relative md:absolute md:top-[40%] md:right-[10%] top-[30%] right-4 left-4 md:left-auto text-right md:text-right max-w-full md:max-w-[360px]">
           <h3 className="text-gray-500 font-normal">DEMO / PLAYGROUND</h3>
-          <h1 className="mt-5 text-[6vw] leading-[1.05] font-semibold">CYBERFIELD<br />IS OUR<br />PLAYGROUND</h1>
+          <h1 className="mt-5 text-[12vw] sm:text-[8vw] md:text-[6vw] leading-[1.05] font-semibold">CYBERFIELD<br />IS OUR<br />PLAYGROUND</h1>
         </div>
       </div>
     </div>

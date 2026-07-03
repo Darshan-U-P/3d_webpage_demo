@@ -15,9 +15,9 @@ export default function ThreeScene() {
     // Scene
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
-    renderer.setSize(mount.clientWidth, mount.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(mount.clientWidth, mount.clientHeight, false);
     mount.appendChild(renderer.domElement);
 
     // Geometry
@@ -102,22 +102,25 @@ export default function ThreeScene() {
     mount.addEventListener('pointermove', onPointerMove);
     mount.addEventListener('pointerleave', onPointerLeave);
 
-    const clock = new THREE.Clock();
+    let prevTime = performance.now();
 
-    // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
-      
-      const time = clock.getElapsedTime();
-      
+
+      const currentTime = performance.now();
+      const delta = (currentTime - prevTime) / 1000;
+      prevTime = currentTime;
+
+      const time = currentTime / 1000;
+
       mesh.rotation.x = THREE.MathUtils.lerp(mesh.rotation.x, targetRotation.x + Math.sin(time * 0.3) * 0.2, 0.08);
       mesh.rotation.y = THREE.MathUtils.lerp(mesh.rotation.y, targetRotation.y + time * 0.2, 0.08);
-      
+
       particlesMesh.rotation.y = time * 0.05;
-      
+
       const positions = particlesGeometry.attributes.position.array as Float32Array;
       for (let i = 0; i < particlesCount * 3; i += 3) {
-         positions[i+1] += Math.sin(time + positions[i]) * 0.002;
+         positions[i + 1] += Math.sin(time + positions[i]) * 0.002;
       }
       particlesGeometry.attributes.position.needsUpdate = true;
 

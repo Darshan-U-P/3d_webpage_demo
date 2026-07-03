@@ -31,13 +31,13 @@
 .proximity-grid-layout {
   position: relative;
   width: 100%;
-  height: 620px;
+  height: clamp(320px, 45vh, 620px);
   pointer-events: none;
 }
 .proximity-card {
   position: absolute;
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   background: linear-gradient(180deg, rgba(14, 116, 144, 0.18), rgba(18, 82, 135, 0.28));
   border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 26px;
@@ -51,8 +51,18 @@
   box-shadow: 0 18px 48px rgba(0, 0, 0, 0.14);
 }
 .proximity-card img {
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
+}
+@media (max-width: 768px) {
+  .proximity-card {
+    width: 70px;
+    height: 70px;
+  }
+  .proximity-card img {
+    width: 28px;
+    height: 28px;
+  }
 }
 .proximity-card-label {
   font-size: 0.68rem;

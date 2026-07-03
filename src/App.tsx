@@ -107,9 +107,9 @@ export default function App() {
       
       {view === 'landing' ? (
       <>
-        <main className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 md:p-12 pt-32 pb-32 min-h-screen items-center relative z-10">
+        <main className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 md:p-12 pt-20 md:pt-32 pb-20 md:pb-32 min-h-screen items-center relative z-10">
           <div className="space-y-8">
-            <h1 className="hero-title text-[40px] md:text-[80px] font-medium leading-[1.2] tracking-tighter text-[#f5f5dc]">
+            <h1 className="hero-title text-[32px] sm:text-[40px] md:text-[80px] font-medium leading-[1.2] tracking-tighter text-[#f5f5dc]">
             <div className="line overflow-hidden mb-6">
               <span className="block"><AnimatedFlower /></span>
             </div>
@@ -125,14 +125,14 @@ export default function App() {
             </div>
           </h1>
           <div className="overflow-hidden">
-            <p ref={subRef} className="text-gray-400 text-sm max-w-[360px] leading-relaxed">
+            <p ref={subRef} className="text-gray-400 text-sm max-w-full sm:max-w-[28rem] leading-relaxed">
               Beautiful animations using React, GSAP and Three.js. 
               Build immersive websites with premium motion, cinematic effects and interactive 3D experiences.
             </p>
           </div>
-          <div ref={btnRef} className="flex flex-col sm:flex-row gap-4 pt-4 z-20 relative">
+          <div ref={btnRef} className="flex flex-col sm:flex-row sm:items-center gap-4 pt-4 z-20 relative">
             <motion.button 
-              className="px-8 py-3 bg-cyan-500 text-white rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition shadow-[0_0_20px_rgba(6,182,212,0.5)]"
+              className="w-full sm:w-auto px-8 py-3 bg-cyan-500 text-white rounded-full font-bold uppercase tracking-widest text-[11px] sm:text-xs hover:bg-white hover:text-black transition shadow-[0_0_20px_rgba(6,182,212,0.5)]"
               whileHover={{scale: 1.1}}
               whileTap={{scale: 0.95}}
               onClick={(e: ReactMouseEvent<HTMLButtonElement>) => {
@@ -143,7 +143,7 @@ export default function App() {
               Login
             </motion.button>
             <motion.button 
-              className="px-8 py-3 bg-cyan-500 text-white rounded-full font-bold uppercase tracking-widest text-xs hover:bg-white hover:text-black transition shadow-[0_0_20px_rgba(6,182,212,0.5)]"
+              className="w-full sm:w-auto px-8 py-3 bg-cyan-500 text-white rounded-full font-bold uppercase tracking-widest text-[11px] sm:text-xs hover:bg-white hover:text-black transition shadow-[0_0_20px_rgba(6,182,212,0.5)]"
               whileHover={{scale: 1.1}}
               whileTap={{scale: 0.95}}
               onClick={(e: ReactMouseEvent<HTMLButtonElement>) => {
@@ -156,7 +156,7 @@ export default function App() {
           </div>
         </div>
         
-        <div className="h-[300px] md:h-[500px] w-full">
+        <div className="h-[280px] sm:h-[360px] md:h-[500px] w-full">
           <ThreeScene />
         </div>
         <Dock />
