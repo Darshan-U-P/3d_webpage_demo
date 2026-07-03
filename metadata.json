@@ -1,0 +1,6 @@
+{
+  "name": "Interactive 3D Product Showcase",
+  "description": "A minimalist landing page featuring a scroll-interactive 3D model.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
